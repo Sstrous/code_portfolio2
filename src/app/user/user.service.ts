@@ -26,7 +26,7 @@ export class UserService {
 	async getUserInfo(userId: string): Promise<User> {
 		return this.userModel
 			.findOne({ id: userId })
-			.populate('organisations', 'name');
+			.populate('organisations').exec();
 	}
 
 	async getOrganisationsFromUser(userId: string): Promise<Organisation[]> {

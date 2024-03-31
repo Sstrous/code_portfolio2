@@ -118,8 +118,19 @@ export class ContractService {
 		return result;
 	}
 
-	async deleteContract(id: string) {
-		var contract = await this.contractModel.findOneAndDelete({ id: id });
+	async deleteContract(token: string ,contractId: string) {
+		// Check if the user has access to the contract
+		const hasAccess = await this.checkIfUserHasAccessToContract(
+			token,
+			contractId,
+		);
+		if (!hasAccess)
+			throw new HttpException(
+				'User does not have access to this contract',
+				HttpStatus.FORBIDDEN,
+			);
+
+		var contract = await this.contractModel.findOneAndDelete({ id: contractId });
 		if (contract == null)
 			throw new HttpException(
 				'Contract not found ',
@@ -129,12 +140,28 @@ export class ContractService {
 		return contract;
 	}
 
+	async checkIfUserHasAccessToContract(userId: string, contractId: string): Promise<boolean> {
+		const user = await this.userService.getUserInfo(userId);
+		const contract = await this.getContractById(contractId);
+
+		const contractOrganisationId = contract.organisation.id;
+		const userOrganisationIds = user.organisations.map((org) => org.id);
+
+		return userOrganisationIds.includes(contractOrganisationId);
+	}
+
+
+
+
+
+
+
 	async getOrganisationContractCount(id: string): Promise<number> {
 		const result = await this.getContractsByOrganisation(id);
 		return result.contracts.length;
 	}
 
-	async editContract(id: string, contract: Contract): Promise<string> {  
+	async editContract(id: string, contract: Contract): Promise<string> {
 		return await this.contractModel.findOneAndUpdate(
 			{ id: id },
 			contract,
