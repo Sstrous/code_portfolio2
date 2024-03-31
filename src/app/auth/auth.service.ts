@@ -76,7 +76,7 @@ export class AuthService {
 				jobTitle,
 				role,
 				organisations,
-			}, 
+			},
 			{
 				new: true,
 			}
@@ -92,7 +92,7 @@ export class AuthService {
 	}
 
 	async editUser(userId: string, identity: any) {
-		
+
 		const oldUser = await this.identityModel.findOne({
 			id: userId,
 		});
@@ -137,7 +137,7 @@ export class AuthService {
 				const oldPassword = identity.oldPassword;
 
 				if (identity.oldPassword != null) {
-					
+
 					if (!oldUser || !(await compare(oldPassword, oldUser.hash))) {
 						throw new HttpException(
 							'Old password is incorrect',
@@ -242,6 +242,7 @@ export class AuthService {
 			sign(
 				{ id: user.id },
 				process.env.JWT_SECRET,
+				{expiresIn: '30m'},
 				(err: Error, token: string) => {
 					if (err) reject(err);
 					else resolve(token);
