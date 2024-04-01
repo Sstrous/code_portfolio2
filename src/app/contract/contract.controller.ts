@@ -40,7 +40,7 @@ export class ContractController {
 	}
 
 	@Delete(':id')
-	async deleteContract(@Param('id') id: string): Promise<Contract> {
-		return await this.contractService.deleteContract(id);
+	async deleteContract(@InjectToken() token: Token, @Param('id') contractId: string): Promise<Contract> {
+		return await this.contractService.deleteContract(token.id,contractId);
 	}
 }

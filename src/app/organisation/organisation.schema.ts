@@ -1,11 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { v4 as uuid } from 'uuid';
+import { Types } from 'mongoose';
 
 export type OrganisationDocument = Organisation & Document;
 
 @Schema()
 export class Organisation {
+	// Include the _id field as optional
+	_id?: Types.ObjectId;
+
 	@Prop({ default: uuid, index: true })
 	id: string;
 
