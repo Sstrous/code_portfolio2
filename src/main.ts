@@ -9,10 +9,10 @@ import { urlencoded, json } from 'express';
 import * as fs from "fs";
 
 async function bootstrap() {
-	// const httpsOptions = {
-	// 	key: fs.readFileSync('./localhost-key.pem'),
-	// 	cert: fs.readFileSync('./localhost.pem'),
-	// };
+	const httpsOptions = {
+		key: fs.readFileSync('./localhost-key.pem'),
+		cert: fs.readFileSync('./localhost.pem'),
+	};
 	const app = await NestFactory.create(AppModule, { cors: true });
 	const globalPrefix = 'api';
 
